@@ -1,56 +1,76 @@
 <script setup lang="ts">
-  import { ref, reactive, watch } from 'vue'
+  import { ref, watch, onMounted } from 'vue'
+  import { storeToRefs } from 'pinia'
   import type { TodoItem } from '@/types/todoItem'
+  import { useTodoStore } from '@/stores/manageTodoList'
   import ListTodoItems from '@/components/ListTodoItems.vue'
   import InputModel from '@/components/InputModel.vue'
 
   const todoText = ref<string>('')
-  const todoItems: TodoItem[] = reactive([{ item: 'teste 1', id: 1 }, { item: 'teste 2', id: 2 }])
-  const concludeItems: TodoItem[] = reactive([{ item: 'teste 1', id: 3 }])
+  const todoStore = useTodoStore()
+  const { todoItems, concludeItems } = storeToRefs(todoStore)
 
-  watch(todoItems, (newValue, oldValue) => {
-    updateLocalStorage()
+  onMounted(() => {
+    const localTodoItems: TodoItem[] = localStorage["todo-items"] ? JSON.parse(localStorage.getItem("todo-items") ?? "") : []
+    const localConcludeItems: TodoItem[] = localStorage["conclude-items"] ? JSON.parse(localStorage.getItem("conclude-items") ?? "") : []
+    const emptyTodo: TodoItem[] = []
+
+    if (localTodoItems.length) {
+      todoItems.value = emptyTodo.concat(localTodoItems)
+    }
+
+    if (localConcludeItems.length) {
+      concludeItems.value = emptyTodo.concat(localConcludeItems)
+    }
+  })
+
+  watch(todoItems.value, (newValue) => {
+    updateLocalStorage('todo-items', newValue)
+  })
+
+  watch(concludeItems.value, (newValue) => {
+    updateLocalStorage('conclude-items', newValue)
   })
 
   function addNewTodoItem() {
-    todoItems.push({ item: todoText.value, id: new Date().getTime() })
-    clearInput()
-  }
+    const newTodoItem = { item: todoText.value, id: new Date().getTime() }
 
-  function addToConclude(index: number) {
-    concludeItems.push(todoItems[index])
+    todoStore.addNewTodoItem(newTodoItem)
+    clearInput()
   }
 
   function clearInput() {
     todoText.value = ''
   }
 
-  function updateLocalStorage() {
-    
+  function updateLocalStorage(item: string, newValue: TodoItem[]) {
+    localStorage.setItem(item, JSON.stringify(newValue))
   }
 </script>
 
 <template>
-  <main class="card w-[500px]">
-    <div class="flex gap-4">
-      <InputModel v-model="todoText" />
-      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="addNewTodoItem">Adicionar</button>
-    </div>
-
-    <div class="py-2">
-      <div>
-        <a class="hover:underline hover:cursor-pointer" to="">
-          <h3 class="text-lg font-bold py-2">Itens pendentes</h3>
-        </a>
-        <ListTodoItems v-model="todoItems" @add-to-conclude="addToConclude" />
+  <div class="h-screen flex justify-center items-center p-2">
+    <div class="card w-[500px]">
+      <div class="flex gap-4">
+        <InputModel v-model="todoText" />
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="addNewTodoItem">Adicionar</button>
       </div>
 
-      <div>
-        <a class="hover:underline hover:cursor-pointer" to="">
-          <h3 class="text-lg font-bold py-2">Itens concluídos</h3>
-        </a>
-        <ListTodoItems v-model="concludeItems" is-conclude />
+      <div class="py-2">
+        <div>
+          <router-link class="hover:underline hover:cursor-pointer" to="/todo-list">
+            <span class="text-lg font-bold py-2">Itens pendentes</span>
+          </router-link>
+          <ListTodoItems v-model="todoItems" />
+        </div>
+
+        <div>
+          <router-link class="hover:underline hover:cursor-pointer" to="/complete-list">
+            <span class="text-lg font-bold py-2">Itens concluídos</span>
+          </router-link>
+          <ListTodoItems v-model="concludeItems" is-conclude />
+        </div>
       </div>
     </div>
-  </main>
+  </div>
 </template>

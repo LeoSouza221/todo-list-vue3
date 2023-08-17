@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { computed, ref, reactive } from 'vue'
   import type { TodoItem } from '@/types/todoItem'
+  import { useTodoStore } from '@/stores/manageTodoList'
   import IconClose from '@/components/icons/IconClose.vue'
   import IconEdit from '@/components/icons/IconEdit.vue'
   import IconCheck from '@/components/icons/IconCheck.vue'
@@ -17,7 +18,9 @@
       default: false
     }
   })
-  const emit = defineEmits(['update:modelValue', 'addToConclude'])
+  const emit = defineEmits(['update:modelValue'])
+  
+  const todoStore = useTodoStore()
 
   const isModalOpen = ref(false)
   const isConcludeModalOpen = ref(false)
@@ -46,34 +49,29 @@
 
   function removeItem(index?: number) {
     if (index) {
-      todoItems.value.splice(index, 1)
+      todoStore.removeItem(index)
       return
     }
 
-    todoItems.value.splice(selectedItem.value, 1)
+    todoStore.removeItem(selectedItem.value)
   }
 
   function concludeItem() {
-    emit('addToConclude', selectedItem.value)
+    todoStore.addToConclude(selectedItem.value)
     isConcludeModalOpen.value = false
 
     removeItem()
   }
 
   function changeTodoItem() {
-    const { id } = todoEdit
-    const position = todoItems.value.findIndex((item) => item.id === id)
-
-    if (position >= 0) {
-      todoItems.value[position] = { ...todoEdit }
-    }
+    todoStore.changeTodoItem(todoEdit)
 
     isModalOpen.value = false
   }
 </script>
 
 <template>
-  <div class="py-2">
+  <div class="py-2" v-if="todoItems.length">
     <div class="grid grid-cols-12 gap-2 py-1 items-center" v-for="(todoItem, index) in todoItems" :key="index">
       <div class="col-span-9 text-start" :class="`col-span-${isConclude ? '12' : '9'}`">
         <span class="text-sm" :class="isConclude ? 'line-through' : ''">{{ todoItem.item }}</span>
@@ -90,6 +88,10 @@
         </button>
       </div>
     </div>
+  </div>
+
+  <div v-else class="text-center opacity-25">
+    <p>Não há itens</p>
   </div>
 
   <ModalComponent v-model="isModalOpen">

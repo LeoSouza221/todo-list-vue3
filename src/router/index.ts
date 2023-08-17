@@ -16,7 +16,7 @@ const router = createRouter({
     {
       path: '/complete-list',
       name: 'complete-list',
-      component: () => import('@/views/TodoList.vue')
+      component: () => import('@/views/TodoListComplete.vue')
     },
   ]
 })
