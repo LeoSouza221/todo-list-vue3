@@ -28,3 +28,8 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
+
+.container-height {
+  height: 100%;
+  padding: 3.5rem 1rem;
+}
