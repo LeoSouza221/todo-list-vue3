@@ -1,26 +1,20 @@
 <script setup lang="ts">
   import { computed } from 'vue'
-  import type { PropType } from 'vue'
-
-  interface TodoItem {
-    item: string
-    id: number
-  }
 
   const props = defineProps({
-    isModalOpen: {
+    modelValue: {
       type: Boolean,
       required: true
     },
   })
-  const emit = defineEmits(['update:isModalOpen'])
+  const emit = defineEmits(['update:modelValue'])
 
   const open = computed({
     get() {
-      return props.isModalOpen
+      return props.modelValue
     },
     set(newValue) {
-      emit('update:isModalOpen', newValue)
+      emit('update:modelValue', newValue)
     }
   })
 </script>
