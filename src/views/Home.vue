@@ -1,39 +1,39 @@
 <script setup lang="ts">
-  import { ref, watch, onMounted } from 'vue'
-  import { storeToRefs } from 'pinia'
+  import { ref, watch } from 'vue'
   import type { TodoItem } from '@/types/todoItem'
-  import { useTodoStore } from '@/stores/manageTodoList'
+  import { useTodo } from '@/utils/composables/todoComposable'
   import ListTodoItems from '@/components/ListTodoItems.vue'
   import InputModel from '@/components/InputModel.vue'
 
+  const isClear = ref<boolean>(false)
+  const inputError = ref<boolean>(true)
+  const inputErrorMessage = ref<string>('')
   const todoText = ref<string>('')
-  const todoStore = useTodoStore()
-  const { todoItems, concludeItems } = storeToRefs(todoStore)
+  const { todoStore, todoItems, concludeItems } = useTodo()
 
-  onMounted(() => {
-    const localTodoItems: TodoItem[] = localStorage["todo-items"] ? JSON.parse(localStorage.getItem("todo-items") ?? "") : []
-    const localConcludeItems: TodoItem[] = localStorage["conclude-items"] ? JSON.parse(localStorage.getItem("conclude-items") ?? "") : []
-    const emptyTodo: TodoItem[] = []
+  watch(todoText, (newValue) => {
+    const isOnlySpaces = newValue.replace(/\s/g, '').length
 
-    if (localTodoItems.length) {
-      todoItems.value = emptyTodo.concat(localTodoItems)
+    if (!newValue.length && !isClear.value) {
+      inputError.value = true
+      inputErrorMessage.value = 'Digite pelo menos 1 caracter'
+
+      return
     }
 
-    if (localConcludeItems.length) {
-      concludeItems.value = emptyTodo.concat(localConcludeItems)
+    if (!isOnlySpaces && !isClear.value) {
+      inputError.value = true
+      inputErrorMessage.value = 'Itens não devem conter somente espaços'
+
+      return
     }
-  })
 
-  watch(todoItems.value, (newValue) => {
-    updateLocalStorage('todo-items', newValue)
-  })
-
-  watch(concludeItems.value, (newValue) => {
-    updateLocalStorage('conclude-items', newValue)
+    inputError.value = false
+    isClear.value = false
   })
 
   function addNewTodoItem() {
-    const newTodoItem = { item: todoText.value, id: new Date().getTime() }
+    const newTodoItem: TodoItem = { item: todoText.value, id: new Date().getTime() }
 
     todoStore.addNewTodoItem(newTodoItem)
     clearInput()
@@ -41,19 +41,16 @@
 
   function clearInput() {
     todoText.value = ''
-  }
-
-  function updateLocalStorage(item: string, newValue: TodoItem[]) {
-    localStorage.setItem(item, JSON.stringify(newValue))
+    isClear.value = true
   }
 </script>
 
 <template>
-  <div class="h-screen flex justify-center items-center p-2">
+  <div class="custom-height flex justify-center items-center p-2">
     <div class="card w-[500px]">
       <div class="flex gap-4">
-        <InputModel v-model="todoText" />
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="addNewTodoItem">Adicionar</button>
+        <InputModel v-model="todoText" :error="inputError" :error-message="inputErrorMessage" placeholder="Adicione um item a lista" />
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-75 disabled:hover:bg-blue-500 h-10" :disabled="inputError" @click="addNewTodoItem">Adicionar</button>
       </div>
 
       <div class="py-2">
@@ -61,14 +58,18 @@
           <router-link class="hover:underline hover:cursor-pointer" to="/todo-list">
             <span class="text-lg font-bold py-2">Itens pendentes</span>
           </router-link>
-          <ListTodoItems v-model="todoItems" />
+          <div class="max-h-[200px] overflow-y-auto">
+            <ListTodoItems v-model="todoItems" />
+          </div>
         </div>
 
         <div>
           <router-link class="hover:underline hover:cursor-pointer" to="/complete-list">
             <span class="text-lg font-bold py-2">Itens concluídos</span>
           </router-link>
-          <ListTodoItems v-model="concludeItems" is-conclude />
+          <div class="max-h-[200px] overflow-y-auto">
+            <ListTodoItems v-model="concludeItems" is-conclude />
+          </div>
         </div>
       </div>
     </div>
