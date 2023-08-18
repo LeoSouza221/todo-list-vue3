@@ -1,5 +1,5 @@
 <template>
-  <footer class="fixed bottom-0 w-full px-4 py-2 bg-slate-50 h-14 flex justify-between items-center">
+  <footer class="fixed bottom-0 w-full px-4 py-2 bg-slate-50 h-14 flex justify-between items-center dark:bg-slate-700 dark:text-white">
     <div>
       <span class="text-base">Leonardo Felipe de Souza</span>
     </div>

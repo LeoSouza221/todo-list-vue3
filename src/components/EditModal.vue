@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { watch, computed, ref, watchEffect } from 'vue'
+  import { computed, ref } from 'vue'
   import type { PropType } from 'vue'
   import { TodoItem } from '@/types/todoItem'
   import { useTodoStore } from '@/stores/manageTodoList'
@@ -67,7 +67,7 @@
 
 <template>
   <ModalComponent v-model="openModal">
-    <div class="card w-[400px]">
+    <div class="card w-[400px] dark:bg-slate-700 dark:text-white">
       <div>
         <h3 class="text-2xl">Editar tarefa</h3>
       </div>

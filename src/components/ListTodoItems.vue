@@ -7,6 +7,7 @@
   import IconCheck from '@/components/icons/IconCheck.vue'
   import ModalComponent from '@/components/ModalComponent.vue'
   import EditModal from './EditModal.vue'
+  import { useDarkMode } from '@/utils/composables/darkMode'
 
   const props = defineProps({
     modelValue: {
@@ -21,6 +22,7 @@
   const emit = defineEmits(['update:modelValue'])
   
   const todoStore = useTodoStore()
+  const { isDarkMode } = useDarkMode()
 
   const isModalOpen = ref(false)
   const isConcludeModalOpen = ref(false)
@@ -65,7 +67,7 @@
 </script>
 
 <template>
-  <div class="py-2" v-if="todoItems.length">
+  <TransitionGroup name="list" tag="div" class="py-2 dark:text-white" v-if="todoItems.length">
     <div class="grid grid-cols-12 gap-2 py-1 items-center" v-for="(todoItem, index) in todoItems" :key="index">
       <div class="col-span-9 text-start" :class="`col-span-${isConclude ? '12' : '9'}`">
         <span class="text-sm" :class="isConclude ? 'line-through' : ''">{{ todoItem.item }}</span>
@@ -82,7 +84,7 @@
         </button>
       </div>
     </div>
-  </div>
+  </TransitionGroup>
 
   <div v-else class="text-center opacity-25">
     <p>Não há itens</p>
@@ -91,7 +93,7 @@
   <EditModal v-model:modal-value="todoEdit" v-model:is-modal-open="isModalOpen" />
 
   <ModalComponent v-model="isConcludeModalOpen">
-    <div class="card w-[300px]">
+    <div class="card w-[300px] dark:bg-slate-700 dark:text-white" :class="isDarkMode ? 'dark' : ''">
       <div class="py-2 text-center">
         <p>Tem certeza que deseja finalizar o item?</p>
       </div>
@@ -105,3 +107,15 @@
     </div>
   </ModalComponent>
 </template>
+
+<style scoped>
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+</style>

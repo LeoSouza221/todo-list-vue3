@@ -6,7 +6,7 @@
 </script>
 
 <template>
-  <div class="container-height">
+  <div class="container-height dark:text-white">
     <h1 class="text-3xl font-bold py-2">Itens pendentes</h1>
     <ListTodoItems v-model="todoItems" />
   </div>
