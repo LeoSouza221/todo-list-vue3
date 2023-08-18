@@ -33,3 +33,7 @@
   height: 100%;
   padding: 3.5rem 1rem;
 }
+
+.custom-height {
+  height: calc(100vh - 7rem)
+}

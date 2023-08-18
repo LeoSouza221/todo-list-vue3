@@ -46,7 +46,7 @@
 </script>
 
 <template>
-  <div class="h-screen flex justify-center items-center p-2">
+  <div class="custom-height flex justify-center items-center p-2">
     <div class="card w-[500px]">
       <div class="flex gap-4">
         <InputModel v-model="todoText" :error="inputError" :error-message="inputErrorMessage" placeholder="Adicione um item a lista" />

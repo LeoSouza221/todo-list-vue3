@@ -6,7 +6,7 @@
   import IconEdit from '@/components/icons/IconEdit.vue'
   import IconCheck from '@/components/icons/IconCheck.vue'
   import ModalComponent from '@/components/ModalComponent.vue'
-  import InputModel from '@/components/InputModel.vue'
+  import EditModal from './EditModal.vue'
 
   const props = defineProps({
     modelValue: {
@@ -62,12 +62,6 @@
 
     removeItem()
   }
-
-  function changeTodoItem() {
-    todoStore.changeTodoItem(todoEdit)
-
-    isModalOpen.value = false
-  }
 </script>
 
 <template>
@@ -94,23 +88,7 @@
     <p>Não há itens</p>
   </div>
 
-  <ModalComponent v-model="isModalOpen">
-    <div class="card w-[400px]">
-      <div>
-        <h3 class="text-2xl">Editar tarefa</h3>
-      </div>
-      <div class="py-2">
-        <InputModel v-model="todoEdit.item" />
-      </div>
-
-      <div class="pt-2 flex justify-between">
-        <button class="bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded" @click="isModalOpen = false">Cancelar</button>
-
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="changeTodoItem">Confirmar</button>
-      </div>
-      
-    </div>
-  </ModalComponent>
+  <EditModal v-model:modal-value="todoEdit" v-model:is-modal-open="isModalOpen" />
 
   <ModalComponent v-model="isConcludeModalOpen">
     <div class="card w-[300px]">
