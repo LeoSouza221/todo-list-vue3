@@ -1,29 +1,8 @@
 <script setup lang="ts">
-  import { onMounted, watch } from 'vue'
-  import { storeToRefs } from 'pinia'
-  import type { TodoItem } from '@/types/todoItem'
-  import { useTodoStore } from '@/stores/manageTodoList'
+  import { useTodo } from '@/utils/composables/todoComposable'
   import ListTodoItems from '@/components/ListTodoItems.vue'
 
-  const todoStore = useTodoStore()
-  const { todoItems } = storeToRefs(todoStore)
-
-  onMounted(() => {
-    const localTodoItems: TodoItem[] = localStorage["todo-items"] ? JSON.parse(localStorage.getItem("todo-items") ?? "") : []
-    const emptyTodo: TodoItem[] = []
-
-    if (localTodoItems.length) {
-      todoItems.value = emptyTodo.concat(localTodoItems)
-    }
-  })
-
-  watch(todoItems.value, (newValue) => {
-    updateLocalStorage('todo-items', newValue)
-  })
-
-  function updateLocalStorage(item: string, newValue: TodoItem[]) {
-    localStorage.setItem(item, JSON.stringify(newValue))
-  }
+  const { todoItems } = useTodo()
 </script>
 
 <template>
