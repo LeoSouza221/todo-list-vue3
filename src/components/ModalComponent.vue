@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { computed } from 'vue'
+  import { useDarkMode } from '@/utils/composables/darkMode'
 
   const props = defineProps({
     modelValue: {
@@ -8,6 +9,8 @@
     },
   })
   const emit = defineEmits(['update:modelValue'])
+
+  const { isDarkMode } = useDarkMode()
 
   const open = computed({
     get() {
@@ -21,25 +24,17 @@
 
 <template>
   <Teleport to="body">
-    <div v-if="open" class="modal">
-      <slot></slot>
-    </div>
+    <transition
+      enter-active-class="transition ease-out duration-300 transform "
+      enter-from-class="opacity-0 translate-y-10 scale-95"
+      enter-to-class="opacity-100 translate-y-0 scale-100"
+      leave-active-class="ease-in duration-200"
+      leave-from-class="opacity-100 translate-y-0 scale-100"
+      leave-to-class="opacity-0 translate-y-10 translate-y-0 scale-95"
+    >
+      <div v-if="open" class="fixed flex items-center justify-center w-full h-full top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50" :class="isDarkMode ? 'dark' : ''">
+        <slot></slot>
+      </div>
+    </transition>
   </Teleport>
 </template>
-
-<style scoped>
-.modal {
-  position: fixed;
-  z-index: 999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0,0,0,0.5);
-}
-</style>
