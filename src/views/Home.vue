@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref, watch } from 'vue'
+  import { ref } from 'vue'
   import type { TodoItem } from '@/types/todoItem'
   import { useTodo } from '@/utils/composables/todoComposable'
   import ListTodoItems from '@/components/ListTodoItems.vue'
@@ -11,28 +11,38 @@
   const todoText = ref<string>('')
   const { todoStore, todoItems, concludeItems } = useTodo()
 
-  watch(todoText, (newValue) => {
-    const isOnlySpaces = newValue.replace(/\s/g, '').length
+  function validateText() {
+    const isOnlySpaces = todoText.value.replace(/\s/g, '').length
 
-    if (!newValue.length && !isClear.value) {
+    if (!todoText.value.length && !isClear.value) {
       inputError.value = true
       inputErrorMessage.value = 'Digite pelo menos 1 caracter'
 
-      return
+      return false
     }
 
     if (!isOnlySpaces && !isClear.value) {
       inputError.value = true
       inputErrorMessage.value = 'Itens não devem conter somente espaços'
 
-      return
+      return false
     }
 
     inputError.value = false
     isClear.value = false
-  })
+
+    return true
+  }
 
   function addNewTodoItem() {
+    isClear.value = false
+
+    const isValid = validateText()
+
+    if (!isValid) {
+      return
+    }
+
     const newTodoItem: TodoItem = { item: todoText.value, id: new Date().getTime() }
 
     todoStore.addNewTodoItem(newTodoItem)
@@ -50,7 +60,7 @@
     <div class="card w-[500px] dark:bg-slate-700 dark:text-white">
       <div class="flex gap-4">
         <InputModel v-model="todoText" :error="inputError" :error-message="inputErrorMessage" placeholder="Adicione um item a lista" />
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-75 disabled:hover:bg-blue-500 h-10" :disabled="inputError" @click="addNewTodoItem">Adicionar</button>
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded h-10" @click="addNewTodoItem">Adicionar</button>
       </div>
 
       <div class="py-2">
@@ -64,7 +74,7 @@
         </div>
 
         <div class="py-2">
-          <router-link class="hover:underline hover:cursor-pointer" to="/complete-list">
+          <router-link class="hover:underline hover:cursor-pointer" :to="{ name: 'todo-list', query: { isConclude: 'true' } }">
             <span class="text-lg font-bold py-2">Itens concluídos</span>
           </router-link>
           <div class="h-[200px] overflow-y-auto overflow-x-hidden	">

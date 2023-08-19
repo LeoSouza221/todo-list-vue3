@@ -10,7 +10,7 @@ const { isDarkMode, applyDarkMode } = useDarkMode()
 <template>
   <div :class="isDarkMode ? 'dark' : ''">
     <HeaderComponent :toggle-dark="applyDarkMode" :is-dark-mode="isDarkMode" />
-    <main class="w-full container-height dark:bg-slate-900">
+    <main class="w-full container-height bg-zinc-50 dark:bg-slate-900">
       <RouterView />
     </main>
     <FooterComponent />
