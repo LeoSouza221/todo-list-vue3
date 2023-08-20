@@ -59,7 +59,7 @@
   <div class="custom-height flex justify-center items-center p-2">
     <div class="card w-[500px] dark:bg-slate-700 dark:text-white">
       <div class="flex gap-4">
-        <InputModel v-model="todoText" :error="inputError" :error-message="inputErrorMessage" placeholder="Adicione um item a lista" />
+        <InputModel v-model="todoText" :error="inputError" :error-message="inputErrorMessage" placeholder="Adicione um item a lista" @update:update-model="addNewTodoItem()" />
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded h-10" @click="addNewTodoItem">Adicionar</button>
       </div>
 
