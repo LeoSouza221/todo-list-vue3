@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { computed, ref } from 'vue'
   import type { PropType } from 'vue'
-  import { TodoItem } from '@/types/todoItem'
+  import type { TodoItem } from '@/types/todoItem'
   import { useTodoStore } from '@/stores/manageTodoList'
   import InputModel from '@/components/InputModel.vue'
   import ModalComponent from '@/components/ModalComponent.vue'
