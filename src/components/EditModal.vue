@@ -72,7 +72,7 @@
         <h3 class="text-2xl">Editar tarefa</h3>
       </div>
       <div class="py-2">
-        <InputModel v-model="todoItem.item" :error="inputError" :error-message="inputErrorMessage" />
+        <InputModel v-model="todoItem.item" :error="inputError" :error-message="inputErrorMessage"  @update:update-model="changeTodoItem()" />
       </div>
 
       <div class="pt-2 flex justify-between">
