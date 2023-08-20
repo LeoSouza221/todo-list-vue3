@@ -1,0 +1,16 @@
+import { shallowMount } from '@vue/test-utils'
+import ListTodoItems from '../components/ListTodoItems.vue'
+
+const teste = [{ item: 'teste', id: 1 }]
+
+const wrapper = shallowMount(ListTodoItems, {
+  propsData: {
+    modelValue: teste,
+  }
+})
+
+describe('FruitList component test', () => {
+  test("tests data attributes", () => {
+      expect(wrapper.vm.fruits).toEqual(teste);
+  })
+})
