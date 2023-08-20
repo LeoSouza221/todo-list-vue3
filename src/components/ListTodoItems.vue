@@ -86,7 +86,7 @@
     </div>
   </TransitionGroup>
 
-  <div v-else class="text-center opacity-25">
+  <div v-else class="w-full text-center opacity-25 p-4">
     <p>Não há itens</p>
   </div>
 
