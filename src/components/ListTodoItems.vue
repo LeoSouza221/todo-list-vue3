@@ -67,8 +67,8 @@
 </script>
 
 <template>
-  <TransitionGroup name="list" tag="div" class="py-2 w-full dark:text-white" v-if="todoItems.length">
-    <div v-for="(todoItem, index) in todoItems" :key="index" class="grid grid-cols-12 gap-2 py-1 items-center">
+  <TransitionGroup name="list" tag="ul" class="py-2 w-full dark:text-white" v-if="todoItems?.length">
+    <li v-for="(todoItem, index) in todoItems" :key="index" class="grid grid-cols-12 gap-2 py-1 items-center">
       <div class="col-span-9 text-start" :class="`col-span-${isConclude ? '12' : '9'}`">
         <span class="text-sm" :class="isConclude ? 'line-through' : ''">{{ todoItem.item }}</span>
       </div>
@@ -83,7 +83,7 @@
           <IconCheck />
         </button>
       </div>
-    </div>
+    </li>
   </TransitionGroup>
 
   <div v-else class="w-full text-center opacity-25 p-4">
