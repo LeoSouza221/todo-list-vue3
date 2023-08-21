@@ -2,7 +2,7 @@
 
 This project use Vue 3 with Vite, Vue Router and Pinia to create a to do list.
 
-![demo-image](https://imgur.com/a/oVmbrty)
+![demo-image](https://imgur.com/15Evwtk)
 
 [Demo](https://leosouza221.github.io/todo-list-vue3/)
 
