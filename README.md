@@ -1,4 +1,4 @@
-# todo-2
+# To do list
 
 This project use Vue 3 with Vite, Vue Router and Pinia to create a to do list.
 
