@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "test": "vitest  --dom",
     "build": "run-p type-check build-only",
     "test:unit": "vitest",
     "preview": "vite preview",
