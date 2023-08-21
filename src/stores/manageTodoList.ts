@@ -8,7 +8,7 @@ export const useTodoStore = defineStore('counter', {
   }),
   actions: {
     removeItem(index: number) {
-      this.todoItems.splice(index, 1) //AQUIIIIIIIIIIIII
+      this.todoItems.splice(index, 1)
     },
     changeTodoItem(todoItem: TodoItem) {
       const { id } = todoItem
