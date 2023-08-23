@@ -32,7 +32,7 @@
       leave-from-class="opacity-100"
       leave-to-class="opacity-0"
     >
-      <div v-if="open" class="fixed flex items-center justify-center w-full h-full top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50" :class="isDarkMode ? 'dark' : ''">
+      <div v-if="open" id="modal" class="fixed flex items-center justify-center w-full h-full top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50" :class="isDarkMode ? 'dark' : ''">
         <slot></slot>
       </div>
     </transition>
